@@ -167,6 +167,10 @@ in order to have "correct" CSV file generation. I could have hand-coded
 a chintzy CSV generator, but it would be wrong and would handle weird
 stuff incorrectly (like embedded newlines.)
 
+If you need help installing Perl modules (because you want to use the
+dbf file capabilities of fast_sample), check out the "how do I install
+perl modules" documentation available L<here|http://www.cpan.org/modules/INSTALL.html>.
+
 =head1 INSTALLATION
 
 =head2 Mac and Linux
