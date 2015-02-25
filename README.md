@@ -41,7 +41,23 @@ fast\_sample \[options\] \[file ...\]
 data. Sometimes you have a super large file, and you wish you could just
 work with 5% of the data. **fast\_sample** let's you do this simply. It also
 allows you to sample files reproducibly by simply specifying a random
-number seed.
+number seed. **fast\_sample** currently supports line-by-line textual 
+formats such as CSV, and the DBF format.
+
+# DEPENDENCIES
+
+**fast\_sample** attempts to be as smart as possible about requiring 3rd
+party modules. If you are just going to use it for just sampling out of
+text files (line by line format such as CSV) it should work without the
+addition of any 3rd party modules, and any perl (I think going back as
+far as 5.6) will work.
+
+However, if you want to sample binary formats (currently only dbf is
+supported), you will unfortunately need to install two modules. In order
+to sample DBFs you need [XBase](https://metacpan.org/pod/XBase) for parsing dbf files, and [Text::CSV](https://metacpan.org/pod/Text::CSV)
+in order to have "correct" CSV file generation. I could have hand-coded
+a chintzy CSV generator, but it would be wrong and would handle weird
+stuff incorrectly (like embedded newlines.)
 
 # INSTALLATION
 
@@ -107,6 +123,6 @@ effortless even when dealing with huge files.
 
 # AUTHOR
 
-The home for **fast\_sample** is on github at https://github.com/earino/fast_sample
+The home for **fast\_sample** is on github at https://github.com/earino/fast\_sample
 
 Eduardo Arino de la Rubia <earino@gmail.com>
