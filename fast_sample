@@ -5,6 +5,7 @@ use strict;
 
 use Getopt::Long;
 use Pod::Usage;
+use Data::Dumper;
 
 my $proportion=1;
 my $header=0;
@@ -23,9 +24,81 @@ srand($seed) if $seed;
 
 die "Proportion is between 0 and 1" if $proportion > 1 || $proportion < 0;
 
-while (<>) {
-  print && next if ($. == 1 && $header);
-  print $_ if rand() < $proportion;
+for my $input_file (@ARGV) {
+  die "ERROR: $input_file doesn't exist.\n" unless -e $input_file;
+  die "ERROR: $input_file can not be read.\n" unless -r $input_file;
+
+  if (-T $input_file) {
+    open(INFILE, "<", $input_file)
+      or die "ERROR: $input_file can not be opened, reason: $!\n";
+
+    while (<INFILE>) {
+      print && next if ($. == 1 && $header);
+      print $_ if rand() < $proportion;
+    }
+
+    close(INFILE);
+  }
+  else {
+    if ($input_file =~ /\.dbf$/i) {
+      my $rc = eval
+      {
+        require XBase;
+        1;
+      };
+
+      die "ERROR: Parsing dbf files requires installation of the perl XBase module.\n"
+        unless $rc;
+
+      $rc = eval
+      {
+        require Text::CSV;
+        my $csv = Text::CSV->new ( { binary => 1 } )  # should set binary attribute.
+                         or die "Cannot use CSV: ".Text::CSV->error_diag ();
+
+        1;
+      };
+
+      die "ERROR: Parsing dbf files requires installation of the perl Text::CSV module for correctness.\n"
+        unless $rc;
+
+      my $csv = Text::CSV->new ( { binary => 1 } )  # should set binary attribute.
+                       or die "Cannot use CSV: ".Text::CSV->error_diag ();
+
+      my $table = new XBase $input_file or die XBase->errstr;
+      if ($header) {
+        my $status = $csv->combine($table->field_names);
+        my $line = $csv->string();
+        print "$line\n";
+      }
+
+      my $total_records = $table->last_record;
+      my $desired_records = int($total_records * $proportion);
+      my @record_indexes = ();
+      if ($proportion == 1) {
+        @record_indexes = (0 .. $total_records)
+      }
+      else {
+        while ($desired_records--) {
+          push(@record_indexes, int(rand($total_records)));
+        }
+        @record_indexes = sort {$a <=> $b} @record_indexes;
+      }
+
+      for my $i (@record_indexes) {
+        my @data = $table->get_record($i);
+        my $is_deleted = shift(@data); #remove the deleted indicator
+        next if $is_deleted;
+
+        my $status = $csv->combine(@data);
+        my $line = $csv->string();
+        print "$line\n";
+      }
+    }
+    else {
+      die "ERROR: $input_file is an unknown format.\n       fast_command only knows how to parse text and dbf files.\n"
+    }
+  }
 }
 
 __END__
@@ -76,7 +149,23 @@ B<fast_sample> is a program that allows you to work with a subset of your
 data. Sometimes you have a super large file, and you wish you could just
 work with 5% of the data. B<fast_sample> let's you do this simply. It also
 allows you to sample files reproducibly by simply specifying a random
-number seed.
+number seed. B<fast_sample> currently supports line-by-line textual 
+formats such as CSV, and the DBF format.
+
+=head1 DEPENDENCIES
+
+B<fast_sample> attempts to be as smart as possible about requiring 3rd
+party modules. If you are just going to use it for just sampling out of
+text files (line by line format such as CSV) it should work without the
+addition of any 3rd party modules, and any perl (I think going back as
+far as 5.6) will work.
+
+However, if you want to sample binary formats (currently only dbf is
+supported), you will unfortunately need to install two modules. In order
+to sample DBFs you need L<XBase> for parsing dbf files, and L<Text::CSV>
+in order to have "correct" CSV file generation. I could have hand-coded
+a chintzy CSV generator, but it would be wrong and would handle weird
+stuff incorrectly (like embedded newlines.)
 
 =head1 INSTALLATION
 
@@ -125,6 +214,8 @@ get this done :-)
 
 =head1 PERFORMANCE
 
+=head2 Text Files
+
 B<fast_sample> attempts to be as fast as possible. Sampling should be
 effortless even when dealing with huge files.
 
@@ -139,6 +230,21 @@ effortless even when dealing with huge files.
   12174947 big.csv
  $ wc -l sampled.csv
      12277 sampled.csv
+
+=head2 DBF Files
+
+B<fast_sample> has to be clever about DBF files, they are clearly not a
+particularly fast format for linear access, so a simple coinflip approach
+did not work. Current performance seems pretty acceptable. 12 seconds to
+sample .001 of a nearly 2 gigabyte dbf file with over 38 million rows.
+
+  $ ls -alh rp19682011.dbf 
+  -rw-r--r--@ 1 earino  staff   1.9G Oct 16 14:29 /Users/earino/Downloads/rp19682011.dbf
+  $ time ./fast_sample -p .001 -h ~/Downloads/rp19682011.dbf > /dev/null
+
+  real    0m12.004s
+  user    0m3.707s
+  sys     0m1.267s
 
 =head1 AUTHOR
 

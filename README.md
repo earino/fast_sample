@@ -41,7 +41,23 @@ fast\_sample \[options\] \[file ...\]
 data. Sometimes you have a super large file, and you wish you could just
 work with 5% of the data. **fast\_sample** let's you do this simply. It also
 allows you to sample files reproducibly by simply specifying a random
-number seed.
+number seed. **fast\_sample** currently supports line-by-line textual 
+formats such as CSV, and the DBF format.
+
+# DEPENDENCIES
+
+**fast\_sample** attempts to be as smart as possible about requiring 3rd
+party modules. If you are just going to use it for just sampling out of
+text files (line by line format such as CSV) it should work without the
+addition of any 3rd party modules, and any perl (I think going back as
+far as 5.6) will work.
+
+However, if you want to sample binary formats (currently only dbf is
+supported), you will unfortunately need to install two modules. In order
+to sample DBFs you need [XBase](https://metacpan.org/pod/XBase) for parsing dbf files, and [Text::CSV](https://metacpan.org/pod/Text::CSV)
+in order to have "correct" CSV file generation. I could have hand-coded
+a chintzy CSV generator, but it would be wrong and would handle weird
+stuff incorrectly (like embedded newlines.)
 
 # INSTALLATION
 
@@ -90,6 +106,8 @@ get this done :-)
 
 # PERFORMANCE
 
+## Text Files
+
 **fast\_sample** attempts to be as fast as possible. Sampling should be
 effortless even when dealing with huge files.
 
@@ -104,6 +122,21 @@ effortless even when dealing with huge files.
      12174947 big.csv
     $ wc -l sampled.csv
         12277 sampled.csv
+
+## DBF Files
+
+**fast\_sample** has to be clever about DBF files, they are clearly not a
+particularly fast format for linear access, so a simple coinflip approach
+did not work. Current performance seems pretty acceptable. 12 seconds to
+sample .001 of a nearly 2 gigabyte dbf file with over 38 million rows.
+
+    $ ls -alh rp19682011.dbf 
+    -rw-r--r--@ 1 earino  staff   1.9G Oct 16 14:29 /Users/earino/Downloads/rp19682011.dbf
+    $ time ./fast_sample -p .001 -h ~/Downloads/rp19682011.dbf > /dev/null
+
+    real    0m12.004s
+    user    0m3.707s
+    sys     0m1.267s
 
 # AUTHOR
 
