@@ -78,7 +78,7 @@ work with 5% of the data. B<fast_sample> let's you do this simply. It also
 allows you to sample files reproducibly by simply specifying a random
 number seed.
 
-head1 PERFORMANCE
+=head1 PERFORMANCE
 
 B<fast_sample> attempts to be as fast as possible. Sampling should be
 effortless even when dealing with huge files.

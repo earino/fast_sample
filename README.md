@@ -43,7 +43,7 @@ work with 5% of the data. **fast\_sample** let's you do this simply. It also
 allows you to sample files reproducibly by simply specifying a random
 number seed.
 
-head1 PERFORMANCE
+# PERFORMANCE
 
 **fast\_sample** attempts to be as fast as possible. Sampling should be
 effortless even when dealing with huge files.
