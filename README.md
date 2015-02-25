@@ -43,6 +43,34 @@ work with 5% of the data. **fast\_sample** let's you do this simply. It also
 allows you to sample files reproducibly by simply specifying a random
 number seed.
 
+# INSTALLATION
+
+## Mac and Linux
+
+**fast\_sample** is very lightweight and requires no 3rd party packages
+installed other than a default Perl installation. Perl comes installed
+on OSX and Linux, so for both of those, simply clone the repository
+and you should be able to execute it at the command line. If you 
+want to have it available just for your user, copy the **fast\_sample**
+script to your ~/bin as follows: 
+
+    cp fast_sample ~/bin
+
+if you want it available for all users in the system, copy it to your
+system /usr/local/bin using the following command:
+
+    sudo cp fast_sample /usr/local/bin
+
+Make sure that the directory you copy the script to is in your search
+path.
+
+## Windows
+
+I have not installed a perl script on windows in a very long time, so
+I unfortunately do not know how to do this. If you want to use 
+**fast\_sample** on Windows, drop me a note and I'll figure out how to
+get this done :-)
+
 # PERFORMANCE
 
 **fast\_sample** attempts to be as fast as possible. Sampling should be
