@@ -101,16 +101,6 @@ for my $input_file (@ARGV) {
   }
 }
 
-sub fisher_yates_shuffle {
-    my $array = shift;
-    my $i;
-    for ($i = @$array; --$i; ) {
-        my $j = int rand ($i+1);
-        next if $i == $j;
-        @$array[$i,$j] = @$array[$j,$i];
-    }
-}
-
 __END__
 =head1 fast_sample
 
@@ -224,6 +214,8 @@ get this done :-)
 
 =head1 PERFORMANCE
 
+=head2 Text Files
+
 B<fast_sample> attempts to be as fast as possible. Sampling should be
 effortless even when dealing with huge files.
 
@@ -238,6 +230,21 @@ effortless even when dealing with huge files.
   12174947 big.csv
  $ wc -l sampled.csv
      12277 sampled.csv
+
+=head2 DBF Files
+
+B<fast_sample> has to be clever about DBF files, they are clearly not a
+particularly fast format for linear access, so a simple coinflip approach
+did not work. Current performance seems pretty acceptable. 12 seconds to
+sample .001 of a nearly 2 gigabyte dbf file with over 38 million rows.
+
+  $ ls -alh rp19682011.dbf 
+  -rw-r--r--@ 1 earino  staff   1.9G Oct 16 14:29 /Users/earino/Downloads/rp19682011.dbf
+  $ time ./fast_sample -p .001 -h ~/Downloads/rp19682011.dbf > /dev/null
+
+  real    0m12.004s
+  user    0m3.707s
+  sys     0m1.267s
 
 =head1 AUTHOR
 

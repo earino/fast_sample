@@ -106,6 +106,8 @@ get this done :-)
 
 # PERFORMANCE
 
+## Text Files
+
 **fast\_sample** attempts to be as fast as possible. Sampling should be
 effortless even when dealing with huge files.
 
@@ -121,8 +123,23 @@ effortless even when dealing with huge files.
     $ wc -l sampled.csv
         12277 sampled.csv
 
+## DBF Files
+
+**fast\_sample** has to be clever about DBF files, they are clearly not a
+particularly fast format for linear access, so a simple coinflip approach
+did not work. Current performance seems pretty acceptable. 12 seconds to
+sample .001 of a nearly 2 gigabyte dbf file with over 38 million rows.
+
+    $ ls -alh rp19682011.dbf 
+    -rw-r--r--@ 1 earino  staff   1.9G Oct 16 14:29 /Users/earino/Downloads/rp19682011.dbf
+    $ time ./fast_sample -p .001 -h ~/Downloads/rp19682011.dbf > /dev/null
+
+    real    0m12.004s
+    user    0m3.707s
+    sys     0m1.267s
+
 # AUTHOR
 
-The home for **fast\_sample** is on github at https://github.com/earino/fast\_sample
+The home for **fast\_sample** is on github at https://github.com/earino/fast_sample
 
 Eduardo Arino de la Rubia <earino@gmail.com>
