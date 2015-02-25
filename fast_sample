@@ -97,7 +97,24 @@ system /usr/local/bin using the following command:
  sudo cp fast_sample /usr/local/bin
 
 Make sure that the directory you copy the script to is in your search
-path.
+path. So to summarize, a full installation would look as follows:
+
+ # first we clone the repo
+ % git clone https://github.com/earino/fast_sample.git
+ Cloning into 'fast_sample'...
+ remote: Counting objects: 31, done.
+ remote: Compressing objects: 100% (26/26), done.
+ remote: Total 31 (delta 14), reused 18 (delta 5), pack-reused 0
+ Unpacking objects: 100% (31/31), done.
+ Checking connectivity... done.
+
+ # then we go into the newly cloned directory
+ % cd fast_sample
+
+ # then we copy the script to our /usr/local/bin
+ % sudo cp fast_sample /usr/local/bin
+ Password:
+ %
 
 =head2 Windows
 
