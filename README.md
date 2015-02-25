@@ -50,6 +50,6 @@ number seed.
 
 # AUTHOR
 
-The home for **fast\_sample** is on github at https://github.com/earino/fast\_sample
+The home for **fast\_sample** is on github at https://github.com/earino/fast_sample
 
 Eduardo Arino de la Rubia <earino@gmail.com>
