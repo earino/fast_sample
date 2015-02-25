@@ -11,7 +11,6 @@ fast\_sample \[options\] \[file ...\]
      -header|h       Always print the header for every file
      -seed|s         The random seed, for reproducibility
      -man|m          The full man page
-     -help|?         This message
 
 # OPTIONS
 
@@ -35,10 +34,6 @@ fast\_sample \[options\] \[file ...\]
 - **-man|m**
 
     The man page for fast\_sample.
-
-- **-help|h**
-
-    Prints a brief help message and exits.
 
 # DESCRIPTION
 

@@ -15,7 +15,7 @@ my $man;
 GetOptions("proportion=f", \$proportion,
            "header", \$header,
            "seed=s", \$seed,
-           'help|?' => \$help, 'man' => \$man)
+           '?' => \$help, 'man' => \$man)
        or pod2usage(2);
 
 pod2usage(1) if $help;
@@ -44,7 +44,6 @@ fast_sample [options] [file ...]
   -header|h       Always print the header for every file
   -seed|s         The random seed, for reproducibility
   -man|m          The full man page
-  -help|?         This message
 
 =head1 OPTIONS
 
@@ -70,10 +69,6 @@ be selected.
 =item B<-man|m>
 
 The man page for fast_sample.
-
-=item B<-help|h>
-
-Prints a brief help message and exits.
 
 =back
 
