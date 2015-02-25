@@ -9,16 +9,14 @@ use Pod::Usage;
 my $proportion=1;
 my $header=0;
 my $seed;
-my $help;
 my $man;
 
 GetOptions("proportion=f", \$proportion,
            "header", \$header,
            "seed=s", \$seed,
-           '?' => \$help, 'man' => \$man)
+           'man' => \$man)
        or pod2usage(2);
 
-pod2usage(1) if $help;
 pod2usage(-exitval => 0, -verbose => 2) if $man;
 
 srand($seed) if $seed;
