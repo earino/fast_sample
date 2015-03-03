@@ -299,4 +299,6 @@ The home for B<fast_sample> is on github at https://github.com/earino/fast_sampl
 
 Eduardo Arino de la Rubia <earino@gmail.com>
 
+=head1 ACKNOWLEDGEMENTS
+
 Reservoir sampling code from L<Program-o-Babble|http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html>.

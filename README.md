@@ -168,4 +168,6 @@ The home for **fast\_sample** is on github at https://github.com/earino/fast_sam
 
 Eduardo Arino de la Rubia <earino@gmail.com>
 
+# ACKNOWLEDGEMENTS
+
 Reservoir sampling code from [Program-o-Babble](http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html).
