@@ -152,7 +152,9 @@ of lines to sample from the input files.
 
 This is an integer of the number of lines to be sampled. Sampling a specific 
 number of lines instead of a constant "coin-flip" proportion is implemented
-using resevoir sampling.
+using resevoir sampling. Wikipedia has a great explanation of L<reservoir sampling|http://en.wikipedia.org/wiki/Reservoir_sampling>,
+but I used the code available L<here|http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html>.
+
 
 =item B<-header|h>
 
@@ -296,3 +298,5 @@ sample .001 of a nearly 2 gigabyte dbf file with over 38 million rows.
 The home for B<fast_sample> is on github at https://github.com/earino/fast_sample
 
 Eduardo Arino de la Rubia <earino@gmail.com>
+
+Reservoir sampling code from L<Program-o-Babble|http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html>.

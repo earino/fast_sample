@@ -24,7 +24,8 @@ fast\_sample \[options\] \[file ...\]
 
     This is an integer of the number of lines to be sampled. Sampling a specific 
     number of lines instead of a constant "coin-flip" proportion is implemented
-    using resevoir sampling.
+    using resevoir sampling. Wikipedia has a great explanation of [reservoir sampling](http://en.wikipedia.org/wiki/Reservoir_sampling),
+    but I used the code available [here](http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html).
 
 - **-header|h**
 
@@ -166,3 +167,5 @@ sample .001 of a nearly 2 gigabyte dbf file with over 38 million rows.
 The home for **fast\_sample** is on github at https://github.com/earino/fast_sample
 
 Eduardo Arino de la Rubia <earino@gmail.com>
+
+Reservoir sampling code from [Program-o-Babble](http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html).
