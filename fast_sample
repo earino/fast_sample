@@ -97,7 +97,7 @@ for my $input_file (@ARGV) {
       my $total_records = $table->last_record;
       my $desired_records = defined $number ? $number : int($total_records * $proportion);
       my @record_indexes = ();
-      if ($proportion == 1) {
+      if (! defined $number && $proportion == 1) {
         @record_indexes = (0 .. $total_records)
       }
       else {
