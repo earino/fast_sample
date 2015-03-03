@@ -1,0 +1,242 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Fast sample by earino</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Fast sample</h1>
+        <p>A script for rapidly sampling a proportion of lines from a file</p>
+
+        <p class="view"><a href="https://github.com/earino/fast_sample">View the Project on GitHub <small>earino/fast_sample</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/earino/fast_sample/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/earino/fast_sample/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/earino/fast_sample">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="fast_sample" class="anchor" href="#fast_sample" aria-hidden="true"><span class="octicon octicon-link"></span></a>fast_sample</h1>
+
+<p>fast_sample - A script for rapidly sampling a proportion of lines from a file</p>
+
+<h1>
+<a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span class="octicon octicon-link"></span></a>SYNOPSIS</h1>
+
+<p>fast_sample [options] [file ...]</p>
+
+<pre><code>Options:
+ -proportion|p   The proportion of lines to sample (e.g. .5 for half.)
+ -number|n       The number of lines to sample.
+ -header|h       Always print the header for every file
+ -seed|s         The random seed, for reproducibility
+ -man|m          The full man page
+</code></pre>
+
+<h1>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>OPTIONS</h1>
+
+<ul>
+<li>
+<p><strong>-proportion|p</strong></p>
+
+<p>This is a floating point number between 0 and 1 which determines the proportion
+of lines to sample from the input files.</p>
+</li>
+<li>
+<p><strong>-number|n</strong></p>
+
+<p>This is an integer of the number of lines to be sampled. Sampling a specific 
+number of lines instead of a constant "coin-flip" proportion is implemented
+using resevoir sampling. Wikipedia has a great explanation of <a href="http://en.wikipedia.org/wiki/Reservoir_sampling">reservoir sampling</a>,
+but I used the code available <a href="http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html">here</a>.</p>
+</li>
+<li>
+<p><strong>-header|h</strong></p>
+
+<p>This is a boolean flag, if it exists then the first line of every file will be
+printed. This is useful for when you want to keep the header of a CSV file.</p>
+</li>
+<li>
+<p><strong>-seed|s</strong></p>
+
+<p>This is an integer flag, it is the seed passed to the random number generator
+which determines which lines are sampled. If you want to make your research
+reproducible, make sure to specify a seed, and the same lines will always
+be selected.</p>
+</li>
+<li>
+<p><strong>-man|m</strong></p>
+
+<p>The man page for fast_sample.</p>
+</li>
+</ul>
+
+<h1>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>DESCRIPTION</h1>
+
+<p><strong>fast_sample</strong> is a program that allows you to work with a subset of your
+data. Sometimes you have a super large file, and you wish you could just
+work with 5% of the data. <strong>fast_sample</strong> let's you do this simply. It also
+allows you to sample files reproducibly by simply specifying a random
+number seed. <strong>fast_sample</strong> currently supports line-by-line textual 
+formats such as CSV, and the DBF format.</p>
+
+<h1>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>DEPENDENCIES</h1>
+
+<p><strong>fast_sample</strong> attempts to be as smart as possible about requiring 3rd
+party modules. If you are just going to use it for just sampling out of
+text files (line by line format such as CSV) it should work without the
+addition of any 3rd party modules, and any perl (I think going back as
+far as 5.6) will work.</p>
+
+<p>However, if you want to sample binary formats (currently only dbf is
+supported), you will unfortunately need to install two modules. In order
+to sample DBFs you need <a href="https://metacpan.org/pod/XBase">XBase</a> for parsing dbf files, and <a href="https://metacpan.org/pod/Text::CSV">Text::CSV</a>
+in order to have "correct" CSV file generation. I could have hand-coded
+a chintzy CSV generator, but it would be wrong and would handle weird
+stuff incorrectly (like embedded newlines.)</p>
+
+<p>If you need help installing Perl modules (because you want to use the
+dbf file capabilities of fast_sample), check out the "how do I install
+perl modules" documentation available <a href="http://www.cpan.org/modules/INSTALL.html">here</a>.</p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>INSTALLATION</h1>
+
+<h2>
+<a id="mac-and-linux" class="anchor" href="#mac-and-linux" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mac and Linux</h2>
+
+<p><strong>fast_sample</strong> is very lightweight and requires no 3rd party packages
+installed other than a default Perl installation. Perl comes installed
+on OSX and Linux, so for both of those, simply clone the repository
+and you should be able to execute it at the command line. If you 
+want to have it available just for your user, copy the <strong>fast_sample</strong>
+script to your ~/bin as follows: </p>
+
+<pre><code>cp fast_sample ~/bin
+</code></pre>
+
+<p>if you want it available for all users in the system, copy it to your
+system /usr/local/bin using the following command:</p>
+
+<pre><code>sudo cp fast_sample /usr/local/bin
+</code></pre>
+
+<p>Make sure that the directory you copy the script to is in your search
+path. So to summarize, a full installation would look as follows:</p>
+
+<pre><code># first we clone the repo
+% git clone https://github.com/earino/fast_sample.git
+Cloning into 'fast_sample'...
+remote: Counting objects: 31, done.
+remote: Compressing objects: 100% (26/26), done.
+remote: Total 31 (delta 14), reused 18 (delta 5), pack-reused 0
+Unpacking objects: 100% (31/31), done.
+Checking connectivity... done.
+
+# then we go into the newly cloned directory
+% cd fast_sample
+
+# then we copy the script to our /usr/local/bin
+% sudo cp fast_sample /usr/local/bin
+Password:
+%
+</code></pre>
+
+<h2>
+<a id="windows" class="anchor" href="#windows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Windows</h2>
+
+<p>I have not installed a perl script on windows in a very long time, so
+I unfortunately do not know how to do this. If you want to use 
+<strong>fast_sample</strong> on Windows, drop me a note and I'll figure out how to
+get this done :-)</p>
+
+<h1>
+<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>PERFORMANCE</h1>
+
+<h2>
+<a id="text-files" class="anchor" href="#text-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Text Files</h2>
+
+<p><strong>fast_sample</strong> attempts to be as fast as possible. Sampling should be
+effortless even when dealing with huge files.</p>
+
+<pre><code>$ ls -alh big.csv
+-rw-r--r--  1 earino  staff   3.1G Feb  7 09:15 big.csv
+$ time fast_sample -h -p .001 big.csv &gt; sampled.csv
+
+real    0m5.949s
+user    0m5.209s
+sys     0m0.694s
+$ wc -l big.csv
+ 12174947 big.csv
+$ wc -l sampled.csv
+    12277 sampled.csv
+</code></pre>
+
+<p>When given an integer count via the -n flag, the system executes the
+resevoir sampling algorithm for fair sampling across a stream. I don't
+believe this is needed for the "coinflip" percentage of lines approach,
+but someone better than me at statistics can probably chime in if I'm
+wrong. Either way, the reservoir sampling is also relatively fast:</p>
+
+<pre><code>$ time ./fast_sample -h -n 3 big.csv &gt; /dev/null
+
+real    0m8.615s
+user    0m7.928s
+sys     0m0.685s
+</code></pre>
+
+<h2>
+<a id="dbf-files" class="anchor" href="#dbf-files" aria-hidden="true"><span class="octicon octicon-link"></span></a>DBF Files</h2>
+
+<p><strong>fast_sample</strong> has to be clever about DBF files, they are clearly not a
+particularly fast format for linear access, so a simple coinflip approach
+did not work. Current performance seems pretty acceptable. 12 seconds to
+sample .001 of a nearly 2 gigabyte dbf file with over 38 million rows.</p>
+
+<pre><code>$ ls -alh rp19682011.dbf 
+-rw-r--r--@ 1 earino  staff   1.9G Oct 16 14:29 /Users/earino/Downloads/rp19682011.dbf
+$ time ./fast_sample -p .001 -h ~/Downloads/rp19682011.dbf &gt; /dev/null
+
+real    0m12.004s
+user    0m3.707s
+sys     0m1.267s
+</code></pre>
+
+<h1>
+<a id="author" class="anchor" href="#author" aria-hidden="true"><span class="octicon octicon-link"></span></a>AUTHOR</h1>
+
+<p>The home for <strong>fast_sample</strong> is on github at <a href="https://github.com/earino/fast_sample">https://github.com/earino/fast_sample</a></p>
+
+<p>Eduardo Arino de la Rubia <a href="mailto:earino@gmail.com">earino@gmail.com</a></p>
+
+<h1>
+<a id="acknowledgements" class="anchor" href="#acknowledgements" aria-hidden="true"><span class="octicon octicon-link"></span></a>ACKNOWLEDGEMENTS</h1>
+
+<p>Reservoir sampling code from <a href="http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html">Program-o-Babble</a>. 
+Motivation to implement reservoir sampling in the first place provided by <a href="https://github.com/nfultz">Neal Fultz</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/earino">earino</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
