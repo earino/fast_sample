@@ -11,18 +11,20 @@ my $proportion=1;
 my $header=0;
 my $seed;
 my $man;
+my $number;
 
 GetOptions("proportion=f", \$proportion,
            "header", \$header,
            "seed=s", \$seed,
-           'man' => \$man)
+           'man' => \$man,
+           'number=i' => \$number)
        or pod2usage(2);
 
 pod2usage(-exitval => 0, -verbose => 2) if $man;
 
 srand($seed) if $seed;
 
-die "Proportion is between 0 and 1" if $proportion > 1 || $proportion < 0;
+die "Proportion must be between 0 and 1" if $proportion > 1 || $proportion < 0;
 
 for my $input_file (@ARGV) {
   die "ERROR: $input_file doesn't exist.\n" unless -e $input_file;
@@ -32,9 +34,29 @@ for my $input_file (@ARGV) {
     open(INFILE, "<", $input_file)
       or die "ERROR: $input_file can not be opened, reason: $!\n";
 
-    while (<INFILE>) {
-      print && next if ($. == 1 && $header);
-      print $_ if rand() < $proportion;
+    # this branch does the 'stream' coinflip sampling instead of the
+    # resevoir sampling
+    unless(defined $number) {
+      while (<INFILE>) {
+        print && next if ($. == 1 && $header);
+        print $_ if rand() < $proportion;
+      }
+    }
+    # this branch handles reservoir sampling
+    else {
+      my @sample = ();
+
+      while (<INFILE>) {
+        print && next if ($. == 1 && $header);
+        if ($. <= $number) {
+          $sample[$.-1] = $_;
+        }
+        elsif (($. > $number) && (rand() < $number/$.)) {
+          my $replace = int(rand(@sample));
+          $sample[$replace] = $_;
+        }
+      }
+      print foreach (@sample);
     }
 
     close(INFILE);
@@ -73,7 +95,7 @@ for my $input_file (@ARGV) {
       }
 
       my $total_records = $table->last_record;
-      my $desired_records = int($total_records * $proportion);
+      my $desired_records = defined $number ? $number : int($total_records * $proportion);
       my @record_indexes = ();
       if ($proportion == 1) {
         @record_indexes = (0 .. $total_records)
@@ -112,6 +134,7 @@ fast_sample [options] [file ...]
 
  Options:
   -proportion|p   The proportion of lines to sample (e.g. .5 for half.)
+  -number|n       The number of lines to sample.
   -header|h       Always print the header for every file
   -seed|s         The random seed, for reproducibility
   -man|m          The full man page
@@ -124,6 +147,12 @@ fast_sample [options] [file ...]
 
 This is a floating point number between 0 and 1 which determines the proportion
 of lines to sample from the input files.
+
+=item B<-number|n>
+
+This is an integer of the number of lines to be sampled. Sampling a specific 
+number of lines instead of a constant "coin-flip" proportion is implemented
+using resevoir sampling.
 
 =item B<-header|h>
 
@@ -230,6 +259,18 @@ effortless even when dealing with huge files.
   12174947 big.csv
  $ wc -l sampled.csv
      12277 sampled.csv
+
+When given an integer count via the -n flag, the system executes the
+resevoir sampling algorithm for fair sampling across a stream. I don't
+believe this is needed for the "coinflip" percentage of lines approach,
+but someone better than me at statistics can probably chime in if I'm
+wrong. Either way, the reservoir sampling is also relatively fast:
+
+  $ time ./fast_sample -h -n 3 big.csv > /dev/null
+
+  real    0m8.615s
+  user    0m7.928s
+  sys     0m0.685s
 
 =head2 DBF Files
 
