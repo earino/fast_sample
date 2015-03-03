@@ -8,6 +8,7 @@ fast\_sample \[options\] \[file ...\]
 
     Options:
      -proportion|p   The proportion of lines to sample (e.g. .5 for half.)
+     -number|n       The number of lines to sample.
      -header|h       Always print the header for every file
      -seed|s         The random seed, for reproducibility
      -man|m          The full man page
@@ -18,6 +19,12 @@ fast\_sample \[options\] \[file ...\]
 
     This is a floating point number between 0 and 1 which determines the proportion
     of lines to sample from the input files.
+
+- **-number|n**
+
+    This is an integer of the number of lines to be sampled. Sampling a specific 
+    number of lines instead of a constant "coin-flip" proportion is implemented
+    using resevoir sampling.
 
 - **-header|h**
 
@@ -126,6 +133,18 @@ effortless even when dealing with huge files.
      12174947 big.csv
     $ wc -l sampled.csv
         12277 sampled.csv
+
+When given an integer count via the -n flag, the system executes the
+resevoir sampling algorithm for fair sampling across a stream. I don't
+believe this is needed for the "coinflip" percentage of lines approach,
+but someone better than me at statistics can probably chime in if I'm
+wrong. Either way, the reservoir sampling is also relatively fast:
+
+    $ time ./fast_sample -h -n 3 big.csv > /dev/null
+
+    real    0m8.615s
+    user    0m7.928s
+    sys     0m0.685s
 
 ## DBF Files
 
