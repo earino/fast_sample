@@ -301,4 +301,5 @@ Eduardo Arino de la Rubia <earino@gmail.com>
 
 =head1 ACKNOWLEDGEMENTS
 
-Reservoir sampling code from L<Program-o-Babble|http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html>.
+Reservoir sampling code from L<Program-o-Babble|http://data-analytics-tools.blogspot.com/2009/09/reservoir-sampling-algorithm-in-perl.html>. 
+Motivation to implement reservoir sampling in the first place provided by L<Neal Fultz|https://github.com/nfultz>.
