@@ -5,7 +5,6 @@ use strict;
 
 use Getopt::Long;
 use Pod::Usage;
-use Data::Dumper;
 
 my $proportion=1;
 my $header=0;
@@ -25,6 +24,7 @@ pod2usage(-exitval => 0, -verbose => 2) if $man;
 srand($seed) if $seed;
 
 die "Proportion must be between 0 and 1" if $proportion > 1 || $proportion < 0;
+die "Cannot specify both -number and -proportion options\n" if defined $number && $proportion != 1;
 
 for my $input_file (@ARGV) {
   die "ERROR: $input_file doesn't exist.\n" unless -e $input_file;
@@ -48,10 +48,12 @@ for my $input_file (@ARGV) {
 
       while (<INFILE>) {
         print && next if ($. == 1 && $header);
-        if ($. <= $number) {
-          $sample[$.-1] = $_;
+        # adjust line number to account for header offset
+        my $line_num = $header ? $. - 1 : $.;
+        if ($line_num <= $number) {
+          $sample[$line_num-1] = $_;
         }
-        elsif (($. > $number) && (rand() < $number/$.)) {
+        elsif (rand() < $number/$line_num) {
           my $replace = int(rand(@sample));
           $sample[$replace] = $_;
         }
@@ -95,16 +97,22 @@ for my $input_file (@ARGV) {
       }
 
       my $total_records = $table->last_record;
-      my $desired_records = defined $number ? $number : int($total_records * $proportion);
+      my $num_records = $total_records + 1;  # last_record is 0-indexed
+      my $desired_records = defined $number ? $number : int($num_records * $proportion);
+      # clamp to available records
+      $desired_records = $num_records if $desired_records > $num_records;
       my @record_indexes = ();
       if (! defined $number && $proportion == 1) {
         @record_indexes = (0 .. $total_records)
       }
       else {
-        while ($desired_records--) {
-          push(@record_indexes, int(rand($total_records)));
+        # use a hash to ensure unique record selection (sampling without replacement)
+        my %selected;
+        while (scalar(keys %selected) < $desired_records) {
+          my $idx = int(rand($num_records));
+          $selected{$idx} = 1;
         }
-        @record_indexes = sort {$a <=> $b} @record_indexes;
+        @record_indexes = sort {$a <=> $b} keys %selected;
       }
 
       for my $i (@record_indexes) {
