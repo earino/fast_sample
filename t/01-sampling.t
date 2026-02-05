@@ -215,7 +215,7 @@ Tests for sampling algorithms (stream coin-flip and reservoir sampling).
     my $output = run_fast_sample($file, '-p', '0.01');
     my @lines = grep { /\S/ } split(/\n/, $output);
 
-    ok(scalar(@lines) >= 0, 'Very small proportion produces valid output');
+    ok(scalar(@lines) < 50, 'Very small proportion produces few lines from 1000');
 }
 
 # Test 19: Very large proportion (close to 1)
