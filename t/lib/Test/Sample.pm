@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Exporter 'import';
 use File::Temp qw/tempdir tempfile/;
+use File::Spec;
 
 our @EXPORT_OK = qw/
     run_fast_sample
@@ -14,7 +15,11 @@ our @EXPORT_OK = qw/
     has_text_csv_module
 /;
 
-our $FAST_SAMPLE_PATH = '/Users/earino/fast_sample/fast_sample';
+# Derive script path relative to t/lib/Test/Sample.pm -> ../../.. -> repo root
+our $FAST_SAMPLE_PATH = do {
+    my ($vol, $dir, $file) = File::Spec->splitpath(File::Spec->rel2abs(__FILE__));
+    File::Spec->catfile($dir, '..', '..', '..', 'fast_sample');
+};
 
 =encoding utf8
 
@@ -120,7 +125,7 @@ Returns true if XBase module is available.
 =cut
 
 sub has_xbase_module {
-    return defined $INC{'XBase.pm'};
+    return eval { require XBase; 1 };
 }
 
 =item has_text_csv_module()
@@ -130,7 +135,7 @@ Returns true if Text::CSV module is available.
 =cut
 
 sub has_text_csv_module {
-    return defined $INC{'Text/CSV.pm'};
+    return eval { require Text::CSV; 1 };
 }
 
 1;
