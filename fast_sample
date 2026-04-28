@@ -21,7 +21,7 @@ GetOptions("proportion=f", \$proportion,
 
 pod2usage(-exitval => 0, -verbose => 2) if $man;
 
-srand($seed) if $seed;
+srand($seed) if defined $seed;
 
 die "Proportion must be between 0 and 1" if $proportion > 1 || $proportion < 0;
 die "Cannot specify both -number and -proportion options\n" if defined $number && $proportion != 1;
